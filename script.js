@@ -13,7 +13,10 @@ var winningConditions = [[1,2,3], // rows
 $(function () { // when the document is ready
 
   $('td').on('click', function () { // when we click on a square
-    if ($(this).text() === '') setValue(this); // if it's empty set its value
+    if ($(this).text() === '') { // if it's empty
+      setValue(this); // set its value
+      checkForWinner(); // check for a winner
+    }
   });
 });
 
@@ -26,8 +29,6 @@ var setValue = function (square) {
   } else {
     turn += 1;
   }
-
-  checkForWinner(); // check for a winner
 };
 
 var checkForWinner = function () {
