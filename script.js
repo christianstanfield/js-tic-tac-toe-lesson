@@ -1,5 +1,6 @@
 var players = ['X','O'];
 var turn = 0;
+var gameWon = false;
 
 var winningConditions = [[1,2,3], // rows
                          [4,5,6],
@@ -12,10 +13,13 @@ var winningConditions = [[1,2,3], // rows
 
 $(function () { // when the document is ready
 
-  $('td').on('click', function () { // when we click on a square
+  $('#player').text(players[turn] + "'s turn"); // show the player's turn
+
+  $('td').on('click', function () { // when the player clicks on a square
     if ($(this).text() === '') { // if it's empty
       setValue(this); // set its value
       checkForWinner(); // check for a winner
+      if (gameWon === false) updateTurn(); // if no winner, change turns
     }
   });
 });
@@ -23,12 +27,16 @@ $(function () { // when the document is ready
 var setValue = function (square) {
 
   $(square).text(players[turn]); // set the square's value to the player whose turn it is
+};
 
-  if (turn === players.length-1) { // change each player's turn
+var updateTurn = function () {
+
+  if (turn === players.length-1) { // update to the next player's turn
     turn = 0;
   } else {
     turn += 1;
   }
+  $('#player').text(players[turn] + "'s turn"); // update the player's turn on screen
 };
 
 var checkForWinner = function () {
@@ -40,7 +48,10 @@ var checkForWinner = function () {
       values.push( $('#' + positions[j]).text() ); // save that square's value
     }
 
-    if (winner(values)) displayWin(values); // check for a winner and display the result if one is found
+    if (winner(values)) { // check for a winner
+      displayWin(values); // display the result if one is found
+      gameWon = true;
+    }
   }
 };
 
@@ -54,6 +65,6 @@ var winner = function (values) {
 };
 
 var displayWin = function (values) {
-  $('h1').append('<br>' + values[0] + ' wins!'); // display the player who won
+  $('#player').text(values[0] + ' wins!'); // display the player who won
   $('td').unbind('click'); // make the squares no longer clickable
 };
